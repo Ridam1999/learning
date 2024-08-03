@@ -1,4 +1,5 @@
-﻿using learning.Models;
+﻿using learning.Interface;
+using learning.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,24 +10,20 @@ namespace learning.Controllers
     [ApiController]
     public class EmployeeController : ControllerBase
     {
-        private readonly EmployeeContext _dbContext;
+        private readonly IEmployee _employee;
 
-        public EmployeeController(EmployeeContext dbContext)
+        public EmployeeController(IEmployee employee)
         {
-            _dbContext = dbContext;
+            _employee = employee;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Employee>>> GetEmployees()
         {
-            if(_dbContext.Employees == null)
-            {
-                return NotFound();
-            }
-            var employees = await _dbContext.Employees.ToListAsync();
-            //var employees = await (from e in _dbContext.Employees
-            //                       select e).ToListAsync();
-            return employees;
+            _employee.GetAllEmployees();
+
+            
+            return _employee.GetAllEmployees(); ;
         }
 
         // GET: api/employees/{id}
